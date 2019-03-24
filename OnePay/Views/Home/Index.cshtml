@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Mvc with Onepay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using OnePay.Models
+@model IEnumerable<Product>
+@{decimal totalPrice = 0;}
+<h2>@ViewBag.Message</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Anh
+            </th>
+            <th>
+                Ten san pham
+            </th>
+            <th>
+                Don gia
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product product in Model)
+        {
+            totalPrice += product.Price;
+            <tr>
+                <td>
+                    <img src="../../Content/@product.PhotoName" class="img-rounded" alt="zero" style="width: 100px;" />
+                </td>
+                <td>@product.Name</td>
+                <td>@product.Price$</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2">
+                Tong tien
+            </td>
+            <td>@totalPrice$</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">
+                <button type="button" class="btn btn-primary" id="info-base">Thong tin tai khoan test</button>
+                <button type="button" class="btn" id="pay">Thanh toan voi onepay</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<div id="Mymodal" class="modal hide fade in">
+    <div id="MyContainer">
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#info-base").click(function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("InforBase", "Home")',
+                dataType: "html",
+                success: function (data) {
+                    $("#MyContainer").html(data);
+                    $("#Mymodal").modal('show');
+                }
+            });
+        });
+
+        $("#pay").click(function () {
+            var url = '@Url.Action("Onepay", "Home")';
+            window.location.assign(url);
+        });
+    });
+
+    function closeModal() {
+        $("#Mymodal").modal('hide');
+    }
+</script>
